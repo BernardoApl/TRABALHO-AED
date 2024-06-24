@@ -1,0 +1,37 @@
+CODIGO EM C++
+Cadastrar uma estadia, primeiro é necessário que o cliente
+e o quarto estejam cadastrados. As estadias devem ser cadastradas apenas para quartos com status
+desocupado, sendo que os possíveis status para o quarto são: ocupado e desocupado. Além disso,
+não devem ser feitas mais de uma estadia para um mesmo quarto em um mesmo período (data de
+entrada, data de saída). As diárias têm início às 14h00 horas e findam as 12h00 horas do dia
+seguinte.
+1. Implemente uma função para cadastrar um cliente. Esta função deve garantir que não
+haverá mais de um cliente com o mesmo código. Se quiser pode gerar o código
+automaticamente.
+
+2. Implemente uma função para cadastrar um funcionário. Esta função deve garantir que não
+haverá mais de um funcionário com o mesmo código. Se quiser pode gerar o código
+automaticamente.
+
+3. Implemente uma função que cadastre uma estadia. Para cadastrar a estadia, o sistema deve
+receber do usuário o código do cliente que deseja se hospedar, a quantidade de hospedes,
+a data de entrada e a data de saída. A partir disso, o sistema deve encontrar um quarto que
+esteja disponível para quantidade hospedes desejados. Além disso, a quantidade de diárias
+deverá ser calculada com base na data de entrada e saída.
+
+4. Implemente uma função que dê baixa em uma determinada estadia e calcule e mostre o
+valor total a ser pago por um determinado cliente. Além disso, lembre-se de alterar o status
+do quarto para desocupado.
+
+5. Implemente funções para realizar pesquisa tanto para clientes quanto para funcionários, ou
+seja, digitando o nome ou código apresenta na tela todas as informações do cliente ou
+funcionário.
+
+6. Implemente uma função que mostre na tela todas as estadias de um determinado cliente.
+Para fazer este programa pode ser necessário criar mais funções do que as que estão descritas.
+Finalmente, faça uma função main() que teste o sistema acima. A função main() deve exibir um
+
+menu na tela, com as opções de cadastrar um cliente, um funcionário e uma estadia. Além disso,
+permitir realizar as pesquisas. Este menu deve ficar em loop até o usuário selecionar a opção SAIR.
+Além disso, todas as informações deverão ser persistidas/armazenadas em arquivos, portanto,
+deverá ser feita leitura e escrita em arquivos
