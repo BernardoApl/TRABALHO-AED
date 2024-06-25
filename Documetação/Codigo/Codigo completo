@@ -1,1 +1,425 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <ctime>
+#include <iomanip>
+#include <map>
+using namespace std;
 
+// Estrutura que salva os dados no sistema 
+struct Cliente {
+    int codigo;         
+    string nome;      
+    string endereco;    
+    string telefone;    
+};
+// Estrutura que salva os dados no sistema 
+struct Funcionario {
+    int codigo;         
+    string nome;        
+    string telefone;    
+    string cargo;      
+    double salario;     
+};
+// Estrutura que salva os dados no sistema 
+struct Estadia {
+    int codigo;             
+    string dataEntrada;     
+    string dataSaida;       
+    int quantidadeDiarias;  
+    int codigoCliente;      
+    int numeroQuarto;      
+};
+// Estrutura que salva os dados no sistema 
+struct Quarto {
+    int numero;             
+    int quantidadeHospedes; 
+    double valorDiaria;     
+    string status;          
+};
+
+// Vetores para armazenar os dados
+vector<Cliente> clientes;           // Lista de clientes
+vector<Funcionario> funcionarios;   // Lista de funcionários
+vector<Estadia> estadias;           // Lista de estadias
+vector<Quarto> quartos;             // Lista de quartos
+
+// Gerar códigos únicos dos clientes ou funcionarios
+int gerarCodigoCliente() {
+    static int codigo = 1;  // Código estático inicializado em 1 e vai ate o infinito
+    return codigo++;
+}
+
+int gerarCodigoFuncionario() {
+    static int codigo = 1;  // Código estático inicializado em 1 e vai ate o infinito
+    return codigo++;
+}
+
+int gerarCodigoEstadia() {
+    static int codigo = 1;  // Código estático inicializado em 1 e vai ate o infinito
+    return codigo++;
+}
+
+// Carregar dados dos arquivos
+void carregarDados() {
+    ifstream file;
+
+    // Carregar clientes
+    file.open("clientes.txt");
+    if (file.is_open()) {
+        string line;
+        while (getline(file, line)) {
+            Cliente c;
+            stringstream ss(line);
+            ss >> c.codigo >> c.nome >> c.endereco >> c.telefone;
+            clientes.push_back(c);
+        }
+        file.close();
+    }
+
+    // Carregar funcionários
+    file.open("funcionarios.txt");
+    if (file.is_open()) {
+        string line;
+        while (getline(file, line)) {
+            Funcionario f;
+            stringstream ss(line);
+            ss >> f.codigo >> f.nome >> f.telefone >> f.cargo >> f.salario;
+            funcionarios.push_back(f);
+        }
+        file.close();
+    }
+
+    // Carregar estadias
+    file.open("estadias.txt");
+    if (file.is_open()) {
+        string line;
+        while (getline(file, line)) {
+            Estadia e;
+            stringstream ss(line);
+            ss >> e.codigo >> e.dataEntrada >> e.dataSaida >> e.quantidadeDiarias >> e.codigoCliente >> e.numeroQuarto;
+            estadias.push_back(e);
+        }
+        file.close();
+    }
+
+    // Carregar quartos
+    file.open("quartos.txt");
+    if (file.is_open()) {
+        string line;
+        while (getline(file, line)) {
+            Quarto q;
+            stringstream ss(line);
+            ss >> q.numero >> q.quantidadeHospedes >> q.valorDiaria >> q.status;
+            quartos.push_back(q);
+        }
+        file.close();
+    }
+}
+
+// Salvar dados nos arquivos
+void salvarDados() {
+    ofstream file;
+
+    // Salvar clientes
+    file.open("clientes.txt");
+    for (const auto& c : clientes) {
+        file << c.codigo << " " << c.nome << " " << c.endereco << " " << c.telefone << endl;
+    }
+    file.close();
+
+    // Salvar funcionários
+    file.open("funcionarios.txt");
+    for (const auto& f : funcionarios) {
+        file << f.codigo << " " << f.nome << " " << f.telefone << " " << f.cargo << " " << f.salario << endl;
+    }
+    file.close();
+
+    // Salvar estadias
+    file.open("estadias.txt");
+    for (const auto& e : estadias) {
+        file << e.codigo << " " << e.dataEntrada << " " << e.dataSaida << " " << e.quantidadeDiarias << " " << e.codigoCliente << " " << e.numeroQuarto << endl;
+    }
+    file.close();
+
+    // Salvar quartos
+    file.open("quartos.txt");
+    for (const auto& q : quartos) {
+        file << q.numero << " " << q.quantidadeHospedes << " " << q.valorDiaria << " " << q.status << endl;
+    }
+    file.close();
+}
+
+// Cadastrar um cliente
+void cadastrarCliente() {
+    Cliente c;
+    c.codigo = gerarCodigoCliente();  // Gera um código único para o cliente
+    cout << "Nome: ";
+    cin.ignore();
+    getline(cin, c.nome);  // Salva o nome do cliente
+    cout << "Endereco: ";
+    getline(cin, c.endereco);  // Salva o endereço do cliente
+    cout << "Telefone: ";
+    getline(cin, c.telefone);  // Salva o telefone do cliente
+    clientes.push_back(c);  // Adiciona o cliente à lista de clientes
+    cout << "Cliente cadastrado com sucesso!" << endl;
+}
+
+// Função para cadastrar um funcionário
+void cadastrarFuncionario() {
+    Funcionario f;
+    f.codigo = gerarCodigoFuncionario();  // Gera um código único para o funcionário
+    cout << "Nome: ";
+    cin.ignore();
+    getline(cin, f.nome);  // Salva o nome do funcionário
+    cout << "Telefone: ";
+    getline(cin, f.telefone);  // Salva o telefone do funcionário
+    cout << "Cargo: ";
+    getline(cin, f.cargo);  // Salva o cargo do funcionário
+    cout << "Salario: ";
+    cin >> f.salario;  // Salvar o salário do funcionário
+    funcionarios.push_back(f);  // Adiciona o funcionário à lista de funcionários
+    cout << "Funcionario cadastrado com sucesso!" << endl;
+}
+
+// calcular a quantidade de diárias com base na data de entrada e saída
+int calcularDiarias(string dataEntrada, string dataSaida) {
+    struct tm tmEntrada = {};  // armazenar a data de entrada
+    struct tm tmSaida = {};    // armazenar a data de saída
+
+    stringstream ssEntrada(dataEntrada);  // converte string para outra string
+    stringstream ssSaida(dataSaida);      // Converte string para a outra string
+
+    ssEntrada >> get_time(&tmEntrada, "%d-%m-%Y");  // Converte a string dataEntrada para struct tm
+    ssSaida >> get_time(&tmSaida, "%d-%m-%Y");      // Converte a string dataSaida para struct tm
+
+    time_t timeEntrada = mktime(&tmEntrada);  // Converte struct tmEntrada para time_t
+    time_t timeSaida = mktime(&tmSaida);   // Converte struct tmSaida para time_t
+
+    double seconds = difftime(timeSaida, timeEntrada);  // Calcula a diferença em segundos entre timeSaida e timeEntrada
+
+    return static_cast<int>(seconds / (60 * 60 * 24));  // Converte a diferença em segundos para dias e da o valor do inteiro
+}
+
+}
+
+// Cadastrar uma estadia
+void cadastrarEstadia() {
+    Estadia e;
+    e.codigo = gerarCodigoEstadia();  // Gera código do usuário 
+
+    cout << "Codigo do Cliente: ";
+    cin >> e.codigoCliente;
+
+    // Verifica se o cliente é cadastrado ainda ou não
+    bool clienteEncontrado = false;
+    for (const auto& c : clientes) {
+        if (c.codigo == e.codigoCliente) {
+            clienteEncontrado = true;
+            break;
+        }
+    }
+
+    if (!clienteEncontrado) {
+        cout << "Cliente nao encontrado!" << endl;
+        return;
+    }
+
+    int quantidadeHospedes;
+    cout << "Quantidade de Hospedes: ";
+    cin >> quantidadeHospedes;
+
+    cout << "Data de Entrada (dd-mm-aaaa): ";
+    cin >> e.dataEntrada;
+    cout << "Data de Saida (dd-mm-aaaa): ";
+    cin >> e.dataSaida;
+
+    // Calcula a quantidade de diárias
+    e.quantidadeDiarias = calcularDiarias(e.dataEntrada, e.dataSaida);
+
+    // Verifica os quartos disponíveis para a quantidade de hóspedes 
+    bool quartoEncontrado = false;
+    for (auto& q : quartos) {
+        if (q.status == "desocupado" && q.quantidadeHospedes >= quantidadeHospedes) {
+            bool conflito = false;
+            for (const auto& est : estadias) {
+                if (est.numeroQuarto == q.numero && 
+                    ((e.dataEntrada >= est.dataEntrada && e.dataEntrada <= est.dataSaida) ||
+                     (e.dataSaida >= est.dataEntrada && e.dataSaida <= est.dataSaida) ||
+                     (e.dataEntrada <= est.dataEntrada && e.dataSaida >= est.dataSaida))) {
+                    conflito = true;
+                    break;
+                }
+            }
+            if (!conflito) {
+                e.numeroQuarto = q.numero;
+                q.status = "ocupado";
+                quartoEncontrado = true;
+                break;
+            }
+        }
+    }
+
+    if (!quartoEncontrado) {
+        cout << "Nao ha quartos disponiveis para a quantidade de hospedes desejada." << endl;
+        return;
+    }
+
+    estadias.push_back(e);  // adiciona a lista de estadia
+    cout << "Estadia cadastrada com sucesso!" << endl;
+}
+
+// dAR baixa em uma estadia e calcular o valor total a ser pago
+void baixaEstadia() {
+    int codigoEstadia;
+    cout << "Codigo da Estadia: ";
+    cin >> codigoEstadia;
+
+    for (auto& e : estadias) {
+        if (e.codigo == codigoEstadia) {
+            for (auto& q : quartos) {
+                if (q.numero == e.numeroQuarto) {
+                    q.status = "desocupado";  // Atualiza o status do quarto para desocupado
+                    double valorTotal = e.quantidadeDiarias * q.valorDiaria;  // Calcular o valor total que vai ser pago
+                    cout << "Valor total a ser pago: " << valorTotal << endl;
+                    return;
+                }
+            }
+        }
+    }
+    cout << "Estadia nao encontrada!" << endl;
+}
+
+// Pesquisar um cliente pelo nome ou código
+void pesquisarCliente() {
+    int opcao;
+    cout << "Pesquisar por: 1. Codigo 2. Nome" << endl;
+    cin >> opcao;
+
+    if (opcao == 1) {
+        int codigo;
+        cout << "Codigo: ";
+        cin >> codigo;
+        for (const auto& c : clientes) {
+            if (c.codigo == codigo) {
+                cout << "Codigo: " << c.codigo << ", Nome: " << c.nome << ", Endereco: " << c.endereco << ", Telefone: " << c.telefone << endl;
+                return;
+            }
+        }
+    } else if (opcao == 2) {
+        string nome;
+        cout << "Nome: ";
+        cin.ignore();
+        getline(cin, nome);
+        for (const auto& c : clientes) {
+            if (c.nome == nome) {
+                cout << "Codigo: " << c.codigo << ", Nome: " << c.nome << ", Endereco: " << c.endereco << ", Telefone: " << c.telefone << endl;
+                return;
+            }
+        }
+    }
+    cout << "Cliente nao encontrado!" << endl;
+}
+
+// Função para pesquisar um funcionário pelo nome ou código
+void pesquisarFuncionario() {
+    int opcao;
+    cout << "Pesquisar por: 1. Codigo 2. Nome" << endl;
+    cin >> opcao;
+
+    if (opcao == 1) {
+        int codigo;
+        cout << "Codigo: ";
+        cin >> codigo;
+        for (const auto& f : funcionarios) {
+            if (f.codigo == codigo) {
+                cout << "Codigo: " << f.codigo << ", Nome: " << f.nome << ", Telefone: " << f.telefone << ", Cargo: " << f.cargo << ", Salario: " << f.salario << endl;
+                return;
+            }
+        }
+    } else if (opcao == 2) {
+        string nome;
+        cout << "Nome: ";
+        cin.ignore();
+        getline(cin, nome);
+        for (const auto& f : funcionarios) {
+            if (f.nome == nome) {
+                cout << "Codigo: " << f.codigo << ", Nome: " << f.nome << ", Telefone: " << f.telefone << ", Cargo: " << f.cargo << ", Salario: " << f.salario << endl;
+                return;
+            }
+        }
+    }
+    cout << "Funcionario nao encontrado!" << endl;
+}
+
+// Função para mostrar todas as estadias de um determinado cliente
+void mostrarEstadiasCliente() {
+    int codigoCliente;
+    cout << "Codigo do Cliente: ";
+    cin >> codigoCliente;
+
+    bool estadiasEncontradas = false;
+    for (const auto& e : estadias) {
+        if (e.codigoCliente == codigoCliente) {
+            cout << "Codigo Estadia: " << e.codigo << ", Data Entrada: " << e.dataEntrada << ", Data Saida: " << e.dataSaida << ", Numero Quarto: " << e.numeroQuarto << ", Quantidade Diarias: " << e.quantidadeDiarias << endl;
+            estadiasEncontradas = true;
+        }
+    }
+    if (!estadiasEncontradas) {
+        cout << "Nenhuma estadia encontrada para o cliente informado." << endl;
+    }
+}
+
+// Função principal
+int main() {
+    carregarDados();  // Carrega os dados dos arquivos
+    int opcao;
+
+    do {
+        cout << "1. Cadastrar Cliente" << endl;
+        cout << "2. Cadastrar Funcionario" << endl;
+        cout << "3. Cadastrar Estadia" << endl;
+        cout << "4. Baixa Estadia" << endl;
+        cout << "5. Pesquisar Cliente" << endl;
+        cout << "6. Pesquisar Funcionario" << endl;
+        cout << "7. Mostrar Estadias de um Cliente" << endl;
+        cout << "8. Sair" << endl;
+        cout << "Opcao: ";
+        cin >> opcao;
+
+        switch (opcao) {
+            case 1:
+                cadastrarCliente();
+                break;
+            case 2:
+                cadastrarFuncionario();
+                break;
+            case 3:
+                cadastrarEstadia();
+                break;
+            case 4:
+                baixaEstadia();
+                break;
+            case 5:
+                pesquisarCliente();
+                break;
+            case 6:
+                pesquisarFuncionario();
+                break;
+            case 7:
+                mostrarEstadiasCliente();
+                break;
+            case 8:
+                salvarDados();  // Salva os dados nos arquivos antes de sair
+                cout << "Saindo..." << endl;
+                break;
+            default:
+                cout << "Opcao invalida!" << endl;
+                break;
+        }
+    } while (opcao != 8);
+
+    return 0;
+}
