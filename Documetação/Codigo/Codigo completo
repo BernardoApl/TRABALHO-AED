@@ -1,12 +1,14 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <ctime>
-#include <iomanip>
-#include <map>
-using namespace std;
+#include <iostream>    //  padrão para entrada e saída de dados
+#include <vector>      //   uso de vetores (arrays dinâmicos)
+#include <string>      //   manipulação de strings
+#include <fstream>     //   manipulação de arquivos
+#include <sstream>     //   manipulação de streams de strings
+#include <ctime>       //   manipulação de datas e horas
+#include <iomanip>     //   manipulação de formatação de entrada e saída
+#include <map>         //  uso de mapas (dicionários)
+
+using namespace std;   // namespace padrão para evitar a necessidade de redefinir  std::
+
 
 // Estrutura que salva os dados no sistema 
 struct Cliente {
