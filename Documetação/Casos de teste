@@ -1,0 +1,40 @@
+Planejamento dos Casos de Teste
+Entradas:
+Clientes:
+1: Nome, Telefone, Email para cadastro de cliente.
+2: Nenhuma entrada direta, apenas seleção de opção.
+Funcionários:
+1: Nome, Cargo, Telefone para cadastro de funcionário.
+2: Nenhuma entrada direta, apenas seleção de opção.
+Estadia:
+1: Nome do Cliente, Número do Quarto para registro de estadia.
+2: Nenhuma entrada direta, apenas seleção de opção.
+Quartos do Hotel:
+1: Número, Tipo e Preço do quarto para cadastro.
+2: Nenhuma entrada direta, apenas seleção de opção.
+Baixar Estadias:
+1: Nome do Cliente, Número do Quarto para realizar o checkout.
+2: Nenhuma entrada direta, apenas seleção de opção.
+TESTES:
+Para cada uma das opções de menu (Clientes, Funcionários, Estadia, Quartos do Hotel, Baixar Estadias):
+1.	Entradas Válidas: Inserir dados que o sistema consegue ler e verificar se estão corretos
+2.	Entradas Inválidas: Inserir dados inválidos, para teste do sistema.
+3.	Opções do Sistema: Teste de todas as opções e algoritmos do sistema
+4.	Manipulação de Arquivos: Verificar se assim que os dados são inseridos, eles estão sendo salvos e usados na outra área própria para busca 
+
+Saídas Esperadas:
+Clientes:
+Cadastro: Mensagem de sucesso ao cadastrar cliente.
+Lista: Todos os clientes cadastrados formatados corretamente.
+Funcionários:
+Cadastro: Mensagem de sucesso ao cadastrar funcionário.
+Lista: Todos os funcionários cadastrados formatados corretamente.
+Estadia:
+Registro: Mensagem de sucesso ao registrar estadia.
+Lista: Todas as estadias registradas formatadas corretamente.
+Quartos do Hotel:
+Cadastro: Mensagem de sucesso ao cadastrar quarto.
+Lista: Todos os quartos cadastrados formatados corretamente.
+Baixar Estadias:
+Realização: Mensagem de sucesso ao realizar checkout.
+Lista: Todos os checkouts realizados formatados corretamente.
