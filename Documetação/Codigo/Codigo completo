@@ -1,427 +1,354 @@
-#include <iostream>    //  padrão para entrada e saída de dados
-#include <vector>      //   uso de vetores (arrays dinâmicos)
-#include <string>      //   manipulação de strings
-#include <fstream>     //   manipulação de arquivos
-#include <sstream>     //   manipulação de streams de strings
-#include <ctime>       //   manipulação de datas e horas
-#include <iomanip>     //   manipulação de formatação de entrada e saída
-#include <map>         //  uso de mapas (dicionários)
+#include <iostream>     // Biblioteca para operações de entrada e saída
+#include <string>       // Biblioteca para manipulação de strings
+#include <fstream>      // Biblioteca para manipulação de arquivos
+#include <sstream>      // Biblioteca para manipulação de strings a partir de streams
+#include <iomanip>      // Biblioteca para manipulação de entrada e saída formatada
+#include <ctime>        // Biblioteca para manipulação de data e hora
 
-using namespace std;   // namespace padrão para evitar a necessidade de redefinir  std::
-
-
-// Estrutura que salva os dados no sistema 
-struct Cliente {
-    int codigo;         
-    string nome;      
-    string endereco;    
-    string telefone;    
-};
-// Estrutura que salva os dados no sistema 
-struct Funcionario {
-    int codigo;         
-    string nome;        
-    string telefone;    
-    string cargo;      
-    double salario;     
-};
-// Estrutura que salva os dados no sistema 
-struct Estadia {
-    int codigo;             
-    string dataEntrada;     
-    string dataSaida;       
-    int quantidadeDiarias;  
-    int codigoCliente;      
-    int numeroQuarto;      
-};
-// Estrutura que salva os dados no sistema 
-struct Quarto {
-    int numero;             
-    int quantidadeHospedes; 
-    double valorDiaria;     
-    string status;          
-};
-
-// Vetores para armazenar os dados
-vector<Cliente> clientes;           // Lista de clientes
-vector<Funcionario> funcionarios;   // Lista de funcionários
-vector<Estadia> estadias;           // Lista de estadias
-vector<Quarto> quartos;             // Lista de quartos
-
-// Gerar códigos únicos dos clientes ou funcionarios
-int gerarCodigoCliente() {
-    static int codigo = 1;  // Código estático inicializado em 1 e vai ate o infinito
-    return codigo++;
-}
-
-int gerarCodigoFuncionario() {
-    static int codigo = 1;  // Código estático inicializado em 1 e vai ate o infinito
-    return codigo++;
-}
-
-int gerarCodigoEstadia() {
-    static int codigo = 1;  // Código estático inicializado em 1 e vai ate o infinito
-    return codigo++;
-}
-
-// Carregar dados dos arquivos
-void carregarDados() {
-    ifstream file;
-
-    // Carregar clientes
-    file.open("clientes.txt");
-    if (file.is_open()) {
-        string line;
-        while (getline(file, line)) {
-            Cliente c;
-            stringstream ss(line);
-            ss >> c.codigo >> c.nome >> c.endereco >> c.telefone;
-            clientes.push_back(c);
-        }
-        file.close();
-    }
-
-    // Carregar funcionários
-    file.open("funcionarios.txt");
-    if (file.is_open()) {
-        string line;
-        while (getline(file, line)) {
-            Funcionario f;
-            stringstream ss(line);
-            ss >> f.codigo >> f.nome >> f.telefone >> f.cargo >> f.salario;
-            funcionarios.push_back(f);
-        }
-        file.close();
-    }
-
-    // Carregar estadias
-    file.open("estadias.txt");
-    if (file.is_open()) {
-        string line;
-        while (getline(file, line)) {
-            Estadia e;
-            stringstream ss(line);
-            ss >> e.codigo >> e.dataEntrada >> e.dataSaida >> e.quantidadeDiarias >> e.codigoCliente >> e.numeroQuarto;
-            estadias.push_back(e);
-        }
-        file.close();
-    }
-
-    // Carregar quartos
-    file.open("quartos.txt");
-    if (file.is_open()) {
-        string line;
-        while (getline(file, line)) {
-            Quarto q;
-            stringstream ss(line);
-            ss >> q.numero >> q.quantidadeHospedes >> q.valorDiaria >> q.status;
-            quartos.push_back(q);
-        }
-        file.close();
-    }
-}
-
-// Salvar dados nos arquivos
-void salvarDados() {
-    ofstream file;
-
-    // Salvar clientes
-    file.open("clientes.txt");
-    for (const auto& c : clientes) {
-        file << c.codigo << " " << c.nome << " " << c.endereco << " " << c.telefone << endl;
-    }
-    file.close();
-
-    // Salvar funcionários
-    file.open("funcionarios.txt");
-    for (const auto& f : funcionarios) {
-        file << f.codigo << " " << f.nome << " " << f.telefone << " " << f.cargo << " " << f.salario << endl;
-    }
-    file.close();
-
-    // Salvar estadias
-    file.open("estadias.txt");
-    for (const auto& e : estadias) {
-        file << e.codigo << " " << e.dataEntrada << " " << e.dataSaida << " " << e.quantidadeDiarias << " " << e.codigoCliente << " " << e.numeroQuarto << endl;
-    }
-    file.close();
-
-    // Salvar quartos
-    file.open("quartos.txt");
-    for (const auto& q : quartos) {
-        file << q.numero << " " << q.quantidadeHospedes << " " << q.valorDiaria << " " << q.status << endl;
-    }
-    file.close();
-}
-
-// Cadastrar um cliente
-void cadastrarCliente() {
-    Cliente c;
-    c.codigo = gerarCodigoCliente();  // Gera um código único para o cliente
-    cout << "Nome: ";
-    cin.ignore();
-    getline(cin, c.nome);  // Salva o nome do cliente
-    cout << "Endereco: ";
-    getline(cin, c.endereco);  // Salva o endereço do cliente
-    cout << "Telefone: ";
-    getline(cin, c.telefone);  // Salva o telefone do cliente
-    clientes.push_back(c);  // Adiciona o cliente à lista de clientes
-    cout << "Cliente cadastrado com sucesso!" << endl;
-}
-
-// Função para cadastrar um funcionário
-void cadastrarFuncionario() {
-    Funcionario f;
-    f.codigo = gerarCodigoFuncionario();  // Gera um código único para o funcionário
-    cout << "Nome: ";
-    cin.ignore();
-    getline(cin, f.nome);  // Salva o nome do funcionário
-    cout << "Telefone: ";
-    getline(cin, f.telefone);  // Salva o telefone do funcionário
-    cout << "Cargo: ";
-    getline(cin, f.cargo);  // Salva o cargo do funcionário
-    cout << "Salario: ";
-    cin >> f.salario;  // Salvar o salário do funcionário
-    funcionarios.push_back(f);  // Adiciona o funcionário à lista de funcionários
-    cout << "Funcionario cadastrado com sucesso!" << endl;
-}
-
-// calcular a quantidade de diárias com base na data de entrada e saída
-int calcularDiarias(string dataEntrada, string dataSaida) {
-    struct tm tmEntrada = {};  // armazenar a data de entrada
-    struct tm tmSaida = {};    // armazenar a data de saída
-
-    stringstream ssEntrada(dataEntrada);  // converte string para outra string
-    stringstream ssSaida(dataSaida);      // Converte string para a outra string
-
-    ssEntrada >> get_time(&tmEntrada, "%d-%m-%Y");  // Converte a string dataEntrada para struct tm
-    ssSaida >> get_time(&tmSaida, "%d-%m-%Y");      // Converte a string dataSaida para struct tm
-
-    time_t timeEntrada = mktime(&tmEntrada);  // Converte struct tmEntrada para time_t
-    time_t timeSaida = mktime(&tmSaida);   // Converte struct tmSaida para time_t
-
-    double seconds = difftime(timeSaida, timeEntrada);  // Calcula a diferença em segundos entre timeSaida e timeEntrada
-
-    return static_cast<int>(seconds / (60 * 60 * 24));  // Converte a diferença em segundos para dias e da o valor do inteiro
-}
-
-}
-
-// Cadastrar uma estadia
-void cadastrarEstadia() {
-    Estadia e;
-    e.codigo = gerarCodigoEstadia();  // Gera código do usuário 
-
-    cout << "Codigo do Cliente: ";
-    cin >> e.codigoCliente;
-
-    // Verifica se o cliente é cadastrado ainda ou não
-    bool clienteEncontrado = false;
-    for (const auto& c : clientes) {
-        if (c.codigo == e.codigoCliente) {
-            clienteEncontrado = true;
-            break;
-        }
-    }
-
-    if (!clienteEncontrado) {
-        cout << "Cliente nao encontrado!" << endl;
-        return;
-    }
-
-    int quantidadeHospedes;
-    cout << "Quantidade de Hospedes: ";
-    cin >> quantidadeHospedes;
-
-    cout << "Data de Entrada (dd-mm-aaaa): ";
-    cin >> e.dataEntrada;
-    cout << "Data de Saida (dd-mm-aaaa): ";
-    cin >> e.dataSaida;
-
-    // Calcula a quantidade de diárias
-    e.quantidadeDiarias = calcularDiarias(e.dataEntrada, e.dataSaida);
-
-    // Verifica os quartos disponíveis para a quantidade de hóspedes 
-    bool quartoEncontrado = false;
-    for (auto& q : quartos) {
-        if (q.status == "desocupado" && q.quantidadeHospedes >= quantidadeHospedes) {
-            bool conflito = false;
-            for (const auto& est : estadias) {
-                if (est.numeroQuarto == q.numero && 
-                    ((e.dataEntrada >= est.dataEntrada && e.dataEntrada <= est.dataSaida) ||
-                     (e.dataSaida >= est.dataEntrada && e.dataSaida <= est.dataSaida) ||
-                     (e.dataEntrada <= est.dataEntrada && e.dataSaida >= est.dataSaida))) {
-                    conflito = true;
-                    break;
-                }
-            }
-            if (!conflito) {
-                e.numeroQuarto = q.numero;
-                q.status = "ocupado";
-                quartoEncontrado = true;
-                break;
-            }
-        }
-    }
-
-    if (!quartoEncontrado) {
-        cout << "Nao ha quartos disponiveis para a quantidade de hospedes desejada." << endl;
-        return;
-    }
-
-    estadias.push_back(e);  // adiciona a lista de estadia
-    cout << "Estadia cadastrada com sucesso!" << endl;
-}
-
-// dAR baixa em uma estadia e calcular o valor total a ser pago
-void baixaEstadia() {
-    int codigoEstadia;
-    cout << "Codigo da Estadia: ";
-    cin >> codigoEstadia;
-
-    for (auto& e : estadias) {
-        if (e.codigo == codigoEstadia) {
-            for (auto& q : quartos) {
-                if (q.numero == e.numeroQuarto) {
-                    q.status = "desocupado";  // Atualiza o status do quarto para desocupado
-                    double valorTotal = e.quantidadeDiarias * q.valorDiaria;  // Calcular o valor total que vai ser pago
-                    cout << "Valor total a ser pago: " << valorTotal << endl;
-                    return;
-                }
-            }
-        }
-    }
-    cout << "Estadia nao encontrada!" << endl;
-}
-
-// Pesquisar um cliente pelo nome ou código
-void pesquisarCliente() {
-    int opcao;
-    cout << "Pesquisar por: 1. Codigo 2. Nome" << endl;
-    cin >> opcao;
-
-    if (opcao == 1) {
-        int codigo;
-        cout << "Codigo: ";
-        cin >> codigo;
-        for (const auto& c : clientes) {
-            if (c.codigo == codigo) {
-                cout << "Codigo: " << c.codigo << ", Nome: " << c.nome << ", Endereco: " << c.endereco << ", Telefone: " << c.telefone << endl;
-                return;
-            }
-        }
-    } else if (opcao == 2) {
-        string nome;
-        cout << "Nome: ";
-        cin.ignore();
-        getline(cin, nome);
-        for (const auto& c : clientes) {
-            if (c.nome == nome) {
-                cout << "Codigo: " << c.codigo << ", Nome: " << c.nome << ", Endereco: " << c.endereco << ", Telefone: " << c.telefone << endl;
-                return;
-            }
-        }
-    }
-    cout << "Cliente nao encontrado!" << endl;
-}
-
-// Função para pesquisar um funcionário pelo nome ou código
-void pesquisarFuncionario() {
-    int opcao;
-    cout << "Pesquisar por: 1. Codigo 2. Nome" << endl;
-    cin >> opcao;
-
-    if (opcao == 1) {
-        int codigo;
-        cout << "Codigo: ";
-        cin >> codigo;
-        for (const auto& f : funcionarios) {
-            if (f.codigo == codigo) {
-                cout << "Codigo: " << f.codigo << ", Nome: " << f.nome << ", Telefone: " << f.telefone << ", Cargo: " << f.cargo << ", Salario: " << f.salario << endl;
-                return;
-            }
-        }
-    } else if (opcao == 2) {
-        string nome;
-        cout << "Nome: ";
-        cin.ignore();
-        getline(cin, nome);
-        for (const auto& f : funcionarios) {
-            if (f.nome == nome) {
-                cout << "Codigo: " << f.codigo << ", Nome: " << f.nome << ", Telefone: " << f.telefone << ", Cargo: " << f.cargo << ", Salario: " << f.salario << endl;
-                return;
-            }
-        }
-    }
-    cout << "Funcionario nao encontrado!" << endl;
-}
-
-// Função para mostrar todas as estadias de um determinado cliente
-void mostrarEstadiasCliente() {
-    int codigoCliente;
-    cout << "Codigo do Cliente: ";
-    cin >> codigoCliente;
-
-    bool estadiasEncontradas = false;
-    for (const auto& e : estadias) {
-        if (e.codigoCliente == codigoCliente) {
-            cout << "Codigo Estadia: " << e.codigo << ", Data Entrada: " << e.dataEntrada << ", Data Saida: " << e.dataSaida << ", Numero Quarto: " << e.numeroQuarto << ", Quantidade Diarias: " << e.quantidadeDiarias << endl;
-            estadiasEncontradas = true;
-        }
-    }
-    if (!estadiasEncontradas) {
-        cout << "Nenhuma estadia encontrada para o cliente informado." << endl;
-    }
-}
-
-// Função principal
-int main() {
-    carregarDados();  // Carrega os dados dos arquivos
-    int opcao;
-
-    do {
-        cout << "1. Cadastrar Cliente" << endl;
-        cout << "2. Cadastrar Funcionario" << endl;
-        cout << "3. Cadastrar Estadia" << endl;
-        cout << "4. Baixa Estadia" << endl;
-        cout << "5. Pesquisar Cliente" << endl;
-        cout << "6. Pesquisar Funcionario" << endl;
-        cout << "7. Mostrar Estadias de um Cliente" << endl;
-        cout << "8. Sair" << endl;
-        cout << "Opcao: ";
-        cin >> opcao;
-
-        switch (opcao) {
+class Hotel {
+public:
+    // Função para mostrar o menu principal e capturar a escolha do usuário
+    void EscolheOpcao(int& o) {
+        std::cout << "Seja muito Bem-Vindo \nSelecione uma das opções abaixo:\n(1) Clientes\n(2) Funcionário\n(3) Estadia\n(4) QuartosdoHotel\n(5) BaixarEstadias\n(0) Sair\n";
+        std::cin >> o;
+        switch (o) {
             case 1:
-                cadastrarCliente();
+                Clientes(o);    // Chama a função para opções de Clientes
                 break;
             case 2:
-                cadastrarFuncionario();
+                Funcionarios(o);    // Chama a função para opções de Funcionário
                 break;
             case 3:
-                cadastrarEstadia();
+                Estadia(o);    // Chama a função para opções de Estadia
                 break;
             case 4:
-                baixaEstadia();
+                QuartosdoHotel(o);    // Chama a função para opções de QuartosdoHotel
                 break;
             case 5:
-                pesquisarCliente();
+                BaixarEstadias(o);    // Chama a função para BaixarEstadias
                 break;
-            case 6:
-                pesquisarFuncionario();
-                break;
-            case 7:
-                mostrarEstadiasCliente();
-                break;
-            case 8:
-                salvarDados();  // Salva os dados nos arquivos antes de sair
-                cout << "Saindo..." << endl;
+            case 0:
+                std::cout << "Saindo...\n";    // Mensagem de saída
                 break;
             default:
-                cout << "Opcao invalida!" << endl;
+                std::cout << "Opção inválida. Tente novamente.\n";    // Mensagem para opção inválida
+                EscolheOpcao(o);    // Rechama a função para escolher a opção
                 break;
         }
-    } while (opcao != 8);
+    }
 
+    // Função para opções de Clientes
+    void Clientes(int& o) {
+        std::cout << "Escolha uma opção para Clientes:\n(1) Cadastrar Clientes\n(2) Lista Clientess\n(0) Reiniciar\n";
+        std::cin >> o;
+        switch (o) {
+            case 1:
+                CadastrarClientes();    // Chama a função para cadastrar cliente
+                break;
+            case 2:
+                ListaClientess();    // Chama a função para listar clientes
+                break;
+            case 0:
+                EscolheOpcao(o);    // Volta ao menu principal
+                break;
+            default:
+                std::cout << "Opção inválida. Tente novamente.\n";    // Mensagem para opção inválida
+                Clientes(o);    // Rechama a função para opções de cliente
+                break;
+        }
+    }
+
+    // Função para cadastrar cliente
+    void CadastrarClientes() {
+        std::string nome, telefone, email;
+        std::cout << "Nome do Clientes: ";
+        std::cin.ignore();
+        std::getline(std::cin, nome);
+        std::cout << "Telefone do Clientes: ";
+        std::getline(std::cin, telefone);
+        std::cout << "Email do Clientes: ";
+        std::getline(std::cin, email);
+
+        std::ofstream arquivo("clientes.txt", std::ios::app);    // Abre o arquivo de clientes para acrescentar
+        arquivo << nome << "," << telefone << "," << email << "\n";    // Escreve os dados do cliente no arquivo
+        arquivo.close();
+
+        std::cout << "Clientes cadastrado com sucesso!\n";
+        int opcao;
+        Clientes(opcao);    // Volta ao menu de cliente
+    }
+
+    // Função para listar clientes
+    void ListaClientess() {
+        std::ifstream arquivo("clientes.txt");    // Abre o arquivo de clientes para leitura
+        std::string linha;
+        std::cout << "Lista de Clientess:\n";
+        while (std::getline(arquivo, linha)) {
+            std::istringstream stream(linha);
+            std::string nome, telefone, email;
+            std::getline(stream, nome, ',');
+            std::getline(stream, telefone, ',');
+            std::getline(stream, email, ',');
+
+            std::cout << "Nome: " << nome << ", Telefone: " << telefone << ", Email: " << email << "\n";
+        }
+        arquivo.close();
+
+        int opcao;
+        Clientes(opcao);    // Volta ao menu de cliente
+    }
+
+    // Função para opções de Funcionário
+    void Funcionarios(int& o) {
+        std::cout << "Escolha uma opção para Funcionário:\n(1) Cadastrar Funcionário\n(2) Lista Funcionários\n(0) Reiniciar\n";
+        std::cin >> o;
+        switch (o) {
+            case 1:
+                CadastrarFuncionarios();    // Chama a função para cadastrar funcionário
+                break;
+            case 2:
+                ListaFuncionarioss();    // Chama a função para listar funcionários
+                break;
+            case 0:
+                EscolheOpcao(o);    // Volta ao menu principal
+                break;
+            default:
+                std::cout << "Opção inválida. Tente novamente.\n";    // Mensagem para opção inválida
+                Funcionarios(o);    // Rechama a função para opções de funcionário
+                break;
+        }
+    }
+
+    // Função para cadastrar funcionário
+    void CadastrarFuncionarios() {
+        std::string nome, cargo, telefone;
+        std::cout << "Nome do Funcionário: ";
+        std::cin.ignore();
+        std::getline(std::cin, nome);
+        std::cout << "Cargo do Funcionário: ";
+        std::getline(std::cin, cargo);
+        std::cout << "Telefone do Funcionário: ";
+        std::getline(std::cin, telefone);
+
+        std::ofstream arquivo("funcionarios.txt", std::ios::app);    // Abre o arquivo de funcionários para acrescentar
+        arquivo << nome << "," << cargo << "," << telefone << "\n";    // Escreve os dados do funcionário no arquivo
+        arquivo.close();
+
+        std::cout << "Funcionário cadastrado com sucesso!\n";
+        int opcao;
+        Funcionarios(opcao);    // Volta ao menu de funcionário
+    }
+
+    // Função para listar funcionários
+    void ListaFuncionarioss() {
+        std::ifstream arquivo("funcionarios.txt");    // Abre o arquivo de funcionários para leitura
+        std::string linha;
+        std::cout << "Lista de Funcionários:\n";
+        while (std::getline(arquivo, linha)) {
+            std::istringstream stream(linha);
+            std::string nome, cargo, telefone;
+            std::getline(stream, nome, ',');
+            std::getline(stream, cargo, ',');
+            std::getline(stream, telefone, ',');
+
+            std::cout << "Nome: " << nome << ", Cargo: " << cargo << ", Telefone: " << telefone << "\n";
+        }
+        arquivo.close();
+
+        int opcao;
+        Funcionarios(opcao);    // Volta ao menu de funcionário
+    }
+
+    // Função para opções de Estadia
+    void Estadia(int& o) {
+        std::cout << "Escolha uma opção para Estadia:\n(1) Registrar Estadia\n(2) Lista Estadias\n(0) Reiniciar\n";
+        std::cin >> o;
+        switch (o) {
+            case 1:
+                RegistrarEstadia();    // Chama a função para registrar estadia
+                break;
+            case 2:
+                ListaEstadias();    // Chama a função para listar estadias
+                break;
+            case 0:
+                EscolheOpcao(o);    // Volta ao menu principal
+                break;
+            default:
+                std::cout << "Opção inválida. Tente novamente.\n";    // Mensagem para opção inválida
+                Estadia(o);    // Rechama a função para opções de estadia
+                break;
+        }
+    }
+
+    // Função para registrar estadia
+    void RegistrarEstadia() {
+        std::string cliente, quarto;
+        std::time_t t = std::time(0);
+        std::tm* now = std::localtime(&t);
+
+        std::cout << "Nome do Clientes: ";
+        std::cin.ignore();
+        std::getline(std::cin, cliente);
+        std::cout << "Número do QuartosdoHotel: ";
+        std::getline(std::cin, quarto);
+
+        std::ofstream arquivo("estadias.txt", std::ios::app);    // Abre o arquivo de estadias para acrescentar
+        arquivo << cliente << "," << quarto << "," 
+                << (now->tm_year + 1900) << '-' 
+                << (now->tm_mon + 1) << '-' 
+                << now->tm_mday << "\n";    // Escreve os dados da estadia no arquivo
+        arquivo.close();
+
+        std::cout << "Estadia registrada com sucesso!\n";
+        int opcao;
+        Estadia(opcao);    // Volta ao menu de estadia
+    }
+
+    // Função para listar estadias
+    void ListaEstadias() {
+        std::ifstream arquivo("estadias.txt");    // Abre o arquivo de estadias para leitura
+        std::string linha;
+        std::cout << "Lista de Estadias:\n";
+        while (std::getline(arquivo, linha)) {
+            std::istringstream stream(linha);
+            std::string cliente, quarto, data;
+            std::getline(stream, cliente, ',');
+            std::getline(stream, quarto, ',');
+            std::getline(stream, data, ',');
+
+            std::cout << "Clientes: " << cliente << ", QuartosdoHotel: " << quarto << ", Data: " << data << "\n";
+        }
+        arquivo.close();
+
+        int opcao;
+        Estadia(opcao);    // Volta ao menu de estadia
+    }
+
+    // Função para opções de QuartosdoHotel
+    void QuartosdoHotel(int& o) {
+        std::cout << "Escolha uma opção para QuartosdoHotel:\n(1) Cadastrar QuartosdoHotel\n(2) Lista QuartosdoHotels\n(0) Reiniciar\n";
+        std::cin >> o;
+        switch (o) {
+            case 1:
+                CadastrarQuartosdoHotel();    // Chama a função para cadastrar quarto
+                break;
+            case 2:
+                ListaQuartosdoHotels();    // Chama a função para listar quartos
+                break;
+            case 0:
+                EscolheOpcao(o);    // Volta ao menu principal
+                break;
+            default:
+                std::cout << "Opção inválida. Tente novamente.\n";    // Mensagem para opção inválida
+                QuartosdoHotel(o);    // Rechama a função para opções de quarto
+                break;
+        }
+    }
+
+    // Função para cadastrar quarto
+    void CadastrarQuartosdoHotel() {
+        std::string numero, tipo;
+        double preco;
+        std::cout << "Número do QuartosdoHotel: ";
+        std::cin.ignore();
+        std::getline(std::cin, numero);
+        std::cout << "Tipo do QuartosdoHotel: ";
+        std::getline(std::cin, tipo);
+        std::cout << "Preço do QuartosdoHotel: ";
+        std::cin >> preco;
+
+        std::ofstream arquivo("quartos.txt", std::ios::app);    // Abre o arquivo de quartos para acrescentar
+        arquivo << numero << "," << tipo << "," << preco << "\n";    // Escreve os dados do quarto no arquivo
+        arquivo.close();
+
+        std::cout << "QuartosdoHotel cadastrado com sucesso!\n";
+        int opcao;
+        QuartosdoHotel(opcao);    // Volta ao menu de quarto
+    }
+
+    // Função para listar quartos
+    void ListaQuartosdoHotels() {
+        std::ifstream arquivo("quartos.txt");    // Abre o arquivo de quartos para leitura
+        std::string linha;
+        std::cout << "Lista de QuartosdoHotels:\n";
+        while (std::getline(arquivo, linha)) {
+            std::istringstream stream(linha);
+            std::string numero, tipo;
+            double preco;
+            std::getline(stream, numero, ',');
+            std::getline(stream, tipo, ',');
+            stream >> preco;
+
+            std::cout << "Número: " << numero << ", Tipo: " << tipo << ", Preço: " << preco << "\n";
+        }
+        arquivo.close();
+
+        int opcao;
+        QuartosdoHotel(opcao);    // Volta ao menu de quarto
+    }
+
+    // Função para BaixarEstadias
+    void BaixarEstadias(int& o) {
+        std::cout << "Escolha uma opção para BaixarEstadias:\n(1) Realizar BaixarEstadias\n(2) Lista BaixarEstadiass\n(0) Reiniciar\n";
+        std::cin >> o;
+        switch (o) {
+            case 1:
+                RealizarBaixarEstadias();    // Chama a função para realizar checkout
+                break;
+            case 2:
+                ListaBaixarEstadiass();    // Chama a função para listar checkouts
+                break;
+            case 0:
+                EscolheOpcao(o);    // Volta ao menu principal
+                break;
+            default:
+                std::cout << "Opção inválida. Tente novamente.\n";    // Mensagem para opção inválida
+                BaixarEstadias(o);    // Rechama a função para opções de checkout
+                break;
+        }
+    }
+
+    // Função para realizar checkout
+    void RealizarBaixarEstadias() {
+        std::string cliente, quarto;
+        std::cout << "Nome do Clientes: ";
+        std::cin.ignore();
+        std::getline(std::cin, cliente);
+        std::cout << "Número do QuartosdoHotel: ";
+        std::getline(std::cin, quarto);
+
+        std::ofstream arquivo("checkouts.txt", std::ios::app);    // Abre o arquivo de checkouts para acrescentar
+        arquivo << cliente << "," << quarto << "\n";    // Escreve os dados do checkout no arquivo
+        arquivo.close();
+
+        std::cout << "BaixarEstadias realizado com sucesso!\n";
+        int opcao;
+        BaixarEstadias(opcao);    // Volta ao menu de checkout
+    }
+
+    // Função para listar checkouts
+    void ListaBaixarEstadiass() {
+        std::ifstream arquivo("checkouts.txt");    // Abre o arquivo de checkouts para leitura
+        std::string linha;
+        std::cout << "Lista de BaixarEstadiass:\n";
+        while (std::getline(arquivo, linha)) {
+            std::istringstream stream(linha);
+            std::string cliente, quarto;
+            std::getline(stream, cliente, ',');
+            std::getline(stream, quarto, ',');
+
+            std::cout << "Clientes: " << cliente << ", QuartosdoHotel: " << quarto << "\n";
+        }
+        arquivo.close();
+
+        int opcao;
+        BaixarEstadias(opcao);    // Volta ao menu de checkout
+    }
+};
+
+int main() {
+    Hotel hotel;
+    int opcao;
+    hotel.EscolheOpcao(opcao);    // Chama a função para escolher a opção do menu principal
     return 0;
 }
